@@ -5,29 +5,30 @@ using UnityEngine;
 public class RaceManger : MonoBehaviour
 {
     public static RaceManger instance;
-    [SerializeField] private List<Transform> list_RacerPostion;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject[] enemy;
-   [SerializeField] private bool isRaceStart = false;
-    private bool isPlayerSpawn =true;
-    private Transform transform_RacerWinningPosition;
-    [SerializeField] [Range(0,11)] private int noOfRacerToSpawn;
-    [SerializeField] private List<GameObject> list_Racers;
-    [SerializeField] private float[] distnce;
+    [SerializeField] private List<Transform> list_RacerPostion;  // this list get All Spawn Postion of Racer
+    [SerializeField] private GameObject player;        // player
+    [SerializeField] private GameObject[] enemy;      // enemy 
+   [SerializeField] private bool isRaceStart = false;   // get Status Race
+    private bool isPlayerSpawn =true;                       // get Status Player Spawn
+    private Transform transform_RacerWinningPosition;   // get Transform End Gameobject
+    [SerializeField] private int total_Postion = 11;
+    [SerializeField] [Range(0, 11)] private int noOfRacerToSpawn;
+   
+    [SerializeField] private List<GameObject> list_Racers;   
+    [SerializeField] private float[] distnce;           // this array get Value of HowFar Racer of Winning Line
     [SerializeField] private List<string> list_RacerName;
     [SerializeField] private List<float> list_RacerCompleteTime;
     [SerializeField] private float currentTime;
     [SerializeField] private int noOfPlayerCompleteRace = 0;
-
     [SerializeField] private  int playerRank;
 
     private void Awake()
     {
         instance = this;
     }
-    public int GetNoOfRacerInGame()
+    public int GetNoOfRacerPostionInGame()
     {
-        return noOfRacerToSpawn;
+        return total_Postion;
     }
 
     public void RemoveGameObjectInList(GameObject current)
@@ -102,21 +103,19 @@ public class RaceManger : MonoBehaviour
     {
         for (int i = 0; i < noOfRacerToSpawn; i++)
         {
-           
+            int index = Random.Range(0, list_RacerPostion.Count);
 
-           
-         
             if (isPlayerSpawn)
             {
                 PlayerManager.instance.SpawnPlayer();
-                PlayerManager.instance.GetPlayer().transform.position = list_RacerPostion[i].position;
+                PlayerManager.instance.GetPlayer().transform.position = list_RacerPostion[index].position;
                 list_Racers.Add(PlayerManager.instance.GetPlayer());
                 isPlayerSpawn = false;
-                list_RacerPostion.RemoveAt(i);
+                list_RacerPostion.RemoveAt(index);
             }
             else
             {
-                int index = Random.Range(0, list_RacerPostion.Count);
+               
                 int enemyIndex = Random.Range(0, enemy.Length);
                GameObject currentEnemy =  Instantiate(enemy[enemyIndex], list_RacerPostion[index].position,
                  enemy[enemyIndex].transform.rotation);

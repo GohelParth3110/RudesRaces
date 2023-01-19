@@ -4,24 +4,36 @@ using UnityEngine;
 
 public class BulletRaycastHandler : MonoBehaviour
 {
-    [SerializeField] private bool isCenterRaycast;
-    [SerializeField] private bool isleftRayCast;
-    [SerializeField] private bool isRightRaycast;
-    [SerializeField] private bool isCompetitorCenter;
-    [SerializeField] private bool isCompetitorLeft;
-    [SerializeField] private bool isCompetitorRight;
+    
     [SerializeField] private int input;
-    [SerializeField] private Transform[] all_Transform;           // 0-center ,1 - left ,2 - right,
+     private AmmoSystem ammoSystem;
+    [SerializeField] private Transform[] all_Transform;           // 0-center ,1 -45, 2 45, 3 -90, 4 -90
+    [SerializeField] private bool[] all_Bool;
+    [SerializeField] private float[] all_AngleRotate;
+    [SerializeField] private Transform tank_Tower;
+    [SerializeField] private Transform target;
+    [SerializeField] private bool isGetPostion;
+    [SerializeField] private float distance;
     [SerializeField] private float flt_ObstaclesRange;
     [SerializeField] private LayerMask ObstackleLayer;
     [SerializeField] private LayerMask competitorLayer;
     [SerializeField] private float flt_CompetitorRange;
 
 
+
+    private void Start()
+    {
+        ammoSystem = GetComponent<AmmoSystem>();
+    }
+
     private void FixedUpdate()
     {
-        GetInput();
-        CheckingAllRaycast();
+        if (ammoSystem.GetAmmo()>0)
+        {
+            GetInput();
+            CheckingAllRaycast();
+        }
+       
     }
 
   
@@ -37,36 +49,31 @@ public class BulletRaycastHandler : MonoBehaviour
     #region RaycastCheckingMethod
     private void GetInput()
     {
-        if (!isCenterRaycast && !isleftRayCast && !isRightRaycast && !isCompetitorCenter && !isCompetitorRight
-                        && !isCompetitorLeft)
-        {
-            input = 0;
-        }
-        else
-        {
-            input = 1;
- 
-        }
+        
 
     }
 
 
     private void CheckingAllRaycast()
     {
+        if (isGetPostion)
+        {
+            return;
+        }
         for (int i = 0; i < all_Transform.Length; i++)
         {
            
-            RaycastHit hit;
+            //RaycastHit hit;
             
-            if (Physics.Raycast(all_Transform[i].position,all_Transform[i].forward, out hit,flt_ObstaclesRange , ObstackleLayer))
-            {
-                SetStatusOfBool(i, true);
-            }
-            else
-            {
-                SetStatusOfBool(i, false);
-                continue;
-            }
+            //if (Physics.Raycast(all_Transform[i].position,all_Transform[i].forward, out hit,flt_ObstaclesRange , ObstackleLayer))
+            //{
+            //    SetStatusOfBool(i, true);
+            //}
+            //else
+            //{
+            //    SetStatusOfBool(i, false);
+               
+            //}
 
         }
         for (int i = 0; i < all_Transform.Length; i++)
@@ -77,53 +84,32 @@ public class BulletRaycastHandler : MonoBehaviour
             if (Physics.Raycast(all_Transform[i].position, all_Transform[i].forward, out hit, 
                 flt_CompetitorRange, competitorLayer))
             {
-                SetStatusCompetitor(i, true);
+
+                Transform currentTarget = hit.collider.transform;
+                float currentDistance = Vector3.Distance(transform.position, currentTarget.position);
+                if (target == null)
+                {
+                    target = hit.collider.transform;
+                    distance = Vector3.Distance(transform.position, target.position);
+                }
+                else 
+                {
+                    if (currentDistance<distance)
+                    {
+                        target = currentTarget;
+                        distance = currentDistance;
+                    }
+                }
             }
-            else
-            {
-                SetStatusCompetitor(i, false);
-               
-            }
+           
             
         }
-    }
-    private void SetStatusCompetitor(int i , bool value)
-    {
-        if (i == 0)
+        if (target != null)
         {
-            isCompetitorCenter = value;
-
-
-        }
-        else if (i == 1)
-        {
-            isCompetitorLeft = value;
-
-        }
-        else if (i == 2)
-        {
-            isCompetitorRight = value;
+            isGetPostion = true;
         }
     }
-    private void SetStatusOfBool(int i, bool value)
-    {
-        if (i == 0)
-        {
-            isCenterRaycast = value;
-
-
-        }
-        else if (i == 1)
-        {
-            isleftRayCast = value;
-
-        }
-        else if (i == 2)
-        {
-            isRightRaycast = value;
-
-        }
-        
-    }
+  
+   
     #endregion
 }

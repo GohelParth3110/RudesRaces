@@ -108,7 +108,7 @@ void Fire()
                 //создаем угол поворота для старта снаряда
                 Quaternion SpawnRoot = Tower.transform.rotation;
 
-                
+
                 print(n);
                 //создаем снаряд
                 GameObject bullet_tank = GameObject.Instantiate(bullet, shootElement[n].position, SpawnRoot) as GameObject;
@@ -126,7 +126,7 @@ void Fire()
 
             }
 
-                
+
 
 
         }

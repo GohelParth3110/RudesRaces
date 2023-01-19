@@ -9,9 +9,11 @@ public class EnemyBulletMovement : MonoBehaviour
     private string tag_Player = "Player";
     private string tag_Obstracles = "Obstacles";
     private string tag_Enemy = "Enemy";
-    [SerializeField]
+    [SerializeField] private float flt_PersantageReduceSpeed;
+    [SerializeField] private float flt_MaxTimeToReduceSpeed;
 
    
+    
     void Update()
     {
         BulletMotion();
@@ -27,6 +29,7 @@ public class EnemyBulletMovement : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamageOfPlayer(flt_DamageOfBullet);
+                other.GetComponent<PlayerMovement>().SetplayerSpeedReduceBulletTouch(flt_PersantageReduceSpeed, flt_MaxTimeToReduceSpeed);
             }
         }
         if (other.gameObject.CompareTag(tag_Obstracles))
@@ -42,6 +45,7 @@ public class EnemyBulletMovement : MonoBehaviour
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamageOfEnemy(flt_DamageOfBullet);
+                other.GetComponent<enemyMovement>().SetBulletTrigger(flt_PersantageReduceSpeed, flt_MaxTimeToReduceSpeed);
             }
         }
 
@@ -51,9 +55,11 @@ public class EnemyBulletMovement : MonoBehaviour
 
 
     #region Properites
-    public void SetBulletDamage(float damage)
+    public void SetBulletProperites(float damage, float reduceSpeed,float maxTime)
     {
         flt_DamageOfBullet = damage;
+        flt_PersantageReduceSpeed = reduceSpeed;
+        flt_MaxTimeToReduceSpeed = maxTime;
     }
     #endregion
 

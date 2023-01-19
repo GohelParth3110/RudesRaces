@@ -24,7 +24,7 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
         flt_CurrentEnemyHealth -= Damage;
-        if (flt_CurrentEnemyHealth<0)
+        if (flt_CurrentEnemyHealth<=0)
         {
             RaceManger.instance.RemoveGameObjectInList(this.gameObject);
             Destroy(gameObject, 0.5f);

@@ -10,7 +10,7 @@ public class RoadVerticalGenerate : MonoBehaviour
 
     private void Start()
     {
-        flt_HorizontalSpawnPostion = -(((RaceManger.instance.GetNoOfRacerInGame() - 1)/2) * flt_VerticalOffset);
+        flt_HorizontalSpawnPostion = -(((RaceManger.instance.GetNoOfRacerPostionInGame() - 1)/2) * flt_VerticalOffset);
         SpawnHorizontalRoad();
     }
 
@@ -18,7 +18,7 @@ public class RoadVerticalGenerate : MonoBehaviour
     {
        
 
-        for (int i = 0; i < RaceManger.instance.GetNoOfRacerInGame(); i++)
+        for (int i = 0; i < RaceManger.instance.GetNoOfRacerPostionInGame(); i++)
         {
             Instantiate(sideRoad, new Vector3(flt_HorizontalSpawnPostion, transform.position.y, 
                 transform.position.z), transform.rotation,transform);

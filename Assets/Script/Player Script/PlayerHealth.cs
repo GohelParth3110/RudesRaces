@@ -26,7 +26,7 @@ public class PlayerHealth : MonoBehaviour
         }
         
         flt_CurrentPlayerHealth -= Damage;
-        if (flt_CurrentPlayerHealth<0)
+        if (flt_CurrentPlayerHealth<=0)
         {
             PlayerManager.instance.SetPlayerStatus(false);
             RaceManger.instance.RemoveGameObjectInList(this.gameObject);

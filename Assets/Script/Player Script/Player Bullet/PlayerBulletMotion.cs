@@ -6,13 +6,17 @@ public class PlayerBulletMotion : MonoBehaviour
 {
     [SerializeField] private float flt_BulletSpeed;
     [SerializeField] private float flt_CurrentDamage;
+    [SerializeField] private float persnatageOfReduceSpeed;
+    [SerializeField] private float maxTime;
    
     private string tag_Enemy = "Enemy";
     private string tag_Obstracles = "Obstacles";
 
-    public void SetBulletDamage(float damage)
+    public void SetBulletDamage(float damage, float RecduceSpeed, float timeToReDuceSpeed)
     {
         flt_CurrentDamage = damage;
+        persnatageOfReduceSpeed = RecduceSpeed;
+        maxTime = timeToReDuceSpeed;
     }
     private void Update()
     {
@@ -25,9 +29,11 @@ public class PlayerBulletMotion : MonoBehaviour
         {
             Destroy(gameObject);
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+           
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamageOfEnemy(flt_CurrentDamage);
+                other.gameObject.GetComponent<enemyMovement>().SetBulletTrigger(persnatageOfReduceSpeed, maxTime);
             }
         }
 

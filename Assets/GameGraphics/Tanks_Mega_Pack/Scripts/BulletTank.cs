@@ -55,11 +55,11 @@ public class BulletTank : MonoBehaviour
     void OnTriggerEnter(Collider other)
 
     {
-        if (other.CompareTag("Castle") || other.CompareTag("enemyBug") || other.CompareTag("Building"))
-        {
-            Hit_2();
+        //if (other.CompareTag("Castle") || other.CompareTag("enemyBug") || other.CompareTag("Building"))
+        //{
+        //    Hit_2();
 
-        }
+        //}
 
     }
 

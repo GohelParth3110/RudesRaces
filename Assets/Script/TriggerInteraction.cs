@@ -77,7 +77,7 @@ public class TriggerInteraction : MonoBehaviour
         }
         else
         {
-            enemyHealth.TakeDamageOfEnemy(obstaclesProperites.GetDamage());
+            enemyHealth.TakeDamageOfEnemy(obstaclesProperites.GetDamage()); 
             enemyMoveMent.SetReduceSpeedWhenTriggerObstackle(
                 obstaclesProperites.GetReduceSpeed(), obstaclesProperites.GetMaxTimeToReduceSpeed());
         }
@@ -90,14 +90,16 @@ public class TriggerInteraction : MonoBehaviour
         
         if (isPlayer)
         {
-            playerMoveMnent.enabled = false;
+            
             playerShooting.enabled = false;
+            playerMoveMnent.SetIsPLayerMove(false);
 
         }
         else
         {
             enemyShooting.enabled = false;
-            enemyMoveMent.enabled = false;
+           
+            enemyMoveMent.SetIsEnemyMove(false);
             
         }
     }

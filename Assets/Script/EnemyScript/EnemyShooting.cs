@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
 {
-    [SerializeField] private int damageOfBullet;
+    [Header("Bullet properites")]
+    [SerializeField] private int damageOfBullet;            
+    [SerializeField] private float flt_PersantageofReduceSpeed;
+    [SerializeField] private float flt_MaxTimeToReduceSpeed;
+
+    [Header("BulletShooting Data")]
     [SerializeField] private GameObject enemyBullet;
     [SerializeField] private bool isenemyBulletSpawn;
     [SerializeField] private float flt_EnemyBulletFireRate;
@@ -38,7 +43,8 @@ public class EnemyShooting : MonoBehaviour
         if (bulletRaycastHandler.GetInputOfEnemy()>0  && isenemyBulletSpawn && ammoSystem.GetAmmo()>0)
         {
             GameObject currentenemyBullet = Instantiate(enemyBullet, bulletSpawnPoint.position, enemyBullet.transform.rotation);
-            currentenemyBullet.GetComponent<EnemyBulletMovement>().SetBulletDamage(damageOfBullet);
+            currentenemyBullet.GetComponent<EnemyBulletMovement>().SetBulletProperites(damageOfBullet,flt_PersantageofReduceSpeed,
+                flt_MaxTimeToReduceSpeed);
             ammoSystem.SubtarctAmmoValue(1);
           
             isenemyBulletSpawn = false;
