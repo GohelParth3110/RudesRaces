@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] private GameObject player_Bullet;
-    [SerializeField] private int damageOfBullet;
-    [SerializeField] private float flt_PersantageReduceSpeed;
-    [SerializeField] private float flt_MaxTimeToReduceSpeed;
-    private bool isBulletSpawnTime;
-    [SerializeField] private float flt_CurrentSpawnBulletTime;
-   [SerializeField] private float flt_BulletFirerate;
-    [SerializeField] private Transform bulletSpawnPoint;
+    [Header("Scripts")]
     private AmmoSystem ammoSystem;
 
-    [Header("Touch Bullet")]
+    [Header("Bullet")]
+    [SerializeField] private GameObject player_Bullet;
     [SerializeField] private Transform bulletSpawnPostion;
     [SerializeField] private Transform tower;
-  
+    [SerializeField] private int damageOfBullet;
+    [SerializeField] private float flt_ReduceSpeedInPercentage;
+    [SerializeField] private float flt_MaxTimeToReduceSpeed;
+
+    private float flt_CurrentSpawnBulletTime;
+    private float flt_BulletFirerate;
+    
+
 
     private void Start()
     {
@@ -33,8 +34,8 @@ public class PlayerShooting : MonoBehaviour
             return;
         }
         FireBullet();
-        HandlingBulletSpawnTime();
     }
+
     private void RotateTower()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -55,34 +56,30 @@ public class PlayerShooting : MonoBehaviour
     #region BulletSpawnSystem
     private void FireBullet()
     {
-        if (Input.GetKey(KeyCode.F) && isBulletSpawnTime && ammoSystem.GetAmmo() >0)
-        {
-            GameObject currentBullet =   Instantiate(player_Bullet, bulletSpawnPostion.position, player_Bullet.transform.rotation);
-            currentBullet.GetComponent<PlayerBulletMotion>().SetBulletDamage(damageOfBullet,flt_PersantageReduceSpeed,flt_MaxTimeToReduceSpeed);
-            ammoSystem.SubtarctAmmoValue(1);
-
-           
-            isBulletSpawnTime = false;
-
-        }
-    }
-
-
-    
-    private void HandlingBulletSpawnTime()
-    {
-        if (isBulletSpawnTime)
-        {
-            return;
-        }
         flt_CurrentSpawnBulletTime += Time.deltaTime;
-        if (flt_CurrentSpawnBulletTime >flt_BulletFirerate)
+
+        if (ammoSystem.GetAmmo() <= 0)
         {
-            isBulletSpawnTime = true;
-            flt_CurrentSpawnBulletTime = 0;
+            return; // no ammo
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            if(flt_CurrentSpawnBulletTime < flt_BulletFirerate)
+            {
+                return; // wait
+            }
+
+            flt_CurrentSpawnBulletTime = 0f;
+            GameObject currentBullet =   Instantiate(player_Bullet, bulletSpawnPostion.position, bulletSpawnPostion.rotation);
+            currentBullet.GetComponent<PlayerBulletMotion>().SetBulletDamage(damageOfBullet,flt_ReduceSpeedInPercentage,flt_MaxTimeToReduceSpeed);
+            ammoSystem.SubtarctAmmoValue(1);
+         
+        }
     }
+
+
+  
 
     #endregion
 

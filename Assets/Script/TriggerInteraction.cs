@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class TriggerInteraction : MonoBehaviour
 {
+    [Header("Scripts")]
     private PlayerHealth playerHealth;
     private PlayerMovement playerMoveMnent;
     private PlayerShooting playerShooting;
     private AmmoSystem ammoSystem;
+
+
     [SerializeField] private bool isPlayer;
     private enemyMovement enemyMoveMent;
     private EnemyHealth enemyHealth;
     private EnemyShooting enemyShooting;
-    private Rigidbody Rb;
     [SerializeField] private Collider thisCollider;
+
+
     private string tag_Obstacles = "Obstacles";
     private string tag_WinningLine = "WinningLine";
    
@@ -21,7 +25,7 @@ public class TriggerInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Rb = GetComponent<Rigidbody>();
+    
         if (isPlayer)
         {
             playerHealth = GetComponent<PlayerHealth>();
@@ -54,30 +58,19 @@ public class TriggerInteraction : MonoBehaviour
 
     
 
-    public void SetMove(bool value)
-    {
-        if (isPlayer)
-        {
-            playerMoveMnent.SetIsPLayerMove(value);
-        }
-        else
-        {
-           
-            enemyMoveMent.SetIsEnemyMove(value);
-        }
-    }
+ 
 
     private void SetDataOfWhenObstacleTrigger(ObstaclesProperites obstaclesProperites)
     {
         if (isPlayer)
         {
-            playerHealth.TakeDamageOfPlayer(obstaclesProperites.GetDamage());
+            playerHealth.TakeDamage(obstaclesProperites.GetDamage());
             playerMoveMnent.SetPlayerMovementWhenPlayerTouchObstacle
                 (obstaclesProperites.GetReduceSpeed(), obstaclesProperites.GetMaxTimeToReduceSpeed());
         }
         else
         {
-            enemyHealth.TakeDamageOfEnemy(obstaclesProperites.GetDamage()); 
+            enemyHealth.TakeDamage(obstaclesProperites.GetDamage()); 
             enemyMoveMent.SetReduceSpeedWhenTriggerObstackle(
                 obstaclesProperites.GetReduceSpeed(), obstaclesProperites.GetMaxTimeToReduceSpeed());
         }
@@ -86,20 +79,16 @@ public class TriggerInteraction : MonoBehaviour
     private void FinishedRace()
     {
         RaceManger.instance.PlayerFinishedRace(transform.name, isPlayer);
-        Rb.velocity = new Vector3(0, 0, 0);
+       
         
         if (isPlayer)
-        {
-            
-            playerShooting.enabled = false;
-            playerMoveMnent.SetIsPLayerMove(false);
-
+        {          
+            playerShooting.enabled = false;      
         }
         else
         {
-            enemyShooting.enabled = false;
+            enemyShooting.enabled = false;     
            
-            enemyMoveMent.SetIsEnemyMove(false);
             
         }
     }

@@ -8,8 +8,7 @@ public class LevelManagement : MonoBehaviour
     [SerializeField] private Transform transform_PlaceWhereGrassSpawn;
     [SerializeField] private Vector3 currentPostion;
     [SerializeField] private float flt_GrassOffset;
-    [SerializeField] private float flt_GrassLength;
-    [SerializeField] private float flt_GrassWidth;
+    [SerializeField] private int line;
     [SerializeField] private GameObject Grass;
     [SerializeField] private float yPostion;
     [Header("Paroprites Of Ground")]
@@ -55,15 +54,19 @@ public class LevelManagement : MonoBehaviour
     [SerializeField] private float radiusOfCircle;
   
     
-
+    public Vector3 GetEndPostion()
+    {
+        return transform_EndLevel.position;
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnGrass();
+      
         SetRaceEndPostion();
         SpawnGround();
+        SpawnGrass();
         SpawnObstackle();
         SpawnAmmo();
 
@@ -71,16 +74,27 @@ public class LevelManagement : MonoBehaviour
 
     private void SpawnGrass()
     {
-        currentPostion = new Vector3(-flt_GrassLength / 2, yPostion, 0);
-       
-        while (currentPostion.x<flt_GrassLength/2)
+        currentPostion = new Vector3(-flt_BoundryPositionOffset-(flt_GrassOffset/2), yPostion, 0);
+
+        for (int i = 0; i < line ; i++)
         {
-            while (currentPostion.z<flt_GrassWidth)
+            while (currentPostion.z < flt_LengthRoad + 10)
             {
-                Instantiate(Grass,currentPostion,transform.rotation,transform_PlaceWhereGrassSpawn);
+                Instantiate(Grass, currentPostion, transform.rotation, transform_PlaceWhereGrassSpawn);
+                currentPostion = new Vector3(currentPostion.x, yPostion, currentPostion.z+flt_GrassOffset);
+            }
+            currentPostion = new Vector3(currentPostion.x- flt_GrassOffset, yPostion, 0);
+        }
+
+        currentPostion = new Vector3(flt_BoundryPositionOffset + (flt_GrassOffset / 2), yPostion, 0);
+        for (int i = 0; i < line; i++)
+        {
+            while (currentPostion.z < flt_LengthRoad + 10)
+            {
+                Instantiate(Grass, currentPostion, transform.rotation, transform_PlaceWhereGrassSpawn);
                 currentPostion = new Vector3(currentPostion.x, yPostion, currentPostion.z + flt_GrassOffset);
             }
-            currentPostion = new Vector3(currentPostion.x+ flt_GrassOffset, yPostion, 0);
+            currentPostion = new Vector3(currentPostion.x + flt_GrassOffset, yPostion, 0);
         }
     }
     private void SpawnGround()
@@ -110,7 +124,7 @@ public class LevelManagement : MonoBehaviour
        
         transform_EndLevel.position = new Vector3(transform_EndLevel.position.x, transform_EndLevel.position.y
                                         ,transform_StartLevel.position.z + flt_LevelLength);
-        RaceManger.instance.SettransformOfWinningBoundry(transform_EndLevel);
+       
     }
   
     private void SpawnObstackle()

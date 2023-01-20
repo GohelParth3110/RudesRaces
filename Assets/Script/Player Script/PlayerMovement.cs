@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Player Properites")]
-    [SerializeField] private float flt_RateOfReduceSpeed;
-    [SerializeField] private float flt_MovementSpeed;   // forwordMoveMentSpeed
-    [SerializeField] private float flt_CurrentMovementSpeed;  // currentForWordSpeed
-    [SerializeField] private float flt_RotatingAngle;  // RotatingAngle
-    [SerializeField] private float flt_RoatatingSpeed; //  RotationSpeed
+    [Header("Componenets")]
     private Rigidbody playerRb;
+
+    [Header("Player Properites")]
+    [SerializeField] private float flt_MovementSpeed;   // base movement speed
+    [SerializeField] private float flt_CurrentMovementSpeed;  // current movement speed
+    [SerializeField] private float flt_RotatingAngle;  // RotatingAngle
+    [SerializeField] private float flt_RotatingSpeed; //  RotationSpeed
+
+    [Header("Game Data")]
+    [SerializeField] private float flt_RateOfReduceSpeed;
     private float flt_TargetAngle;
     private float flt_CurrentAngle;
-    [SerializeField]private bool isPlayerMove ;
+
 
     [Header("ReduceSpeed When Trigger Something")]
     [SerializeField] private float flt_MaxSlowTime;
     [SerializeField] private float flt_CurrentSlowTime;
-    [SerializeField] private bool isSlowTime;
+    [SerializeField] private bool isHit;
 
     
    
@@ -42,14 +46,7 @@ public class PlayerMovement : MonoBehaviour
     }
     #region PlayerProperites
 
-    public bool GetIsPlayerMove()
-    {
-        return isPlayerMove;
-    }
-    public void SetIsPLayerMove(bool Value)
-    {
-        isPlayerMove = Value;
-    }
+   
    
     #endregion
 
@@ -71,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
             flt_CurrentSlowTime = 0;
         }
 
-        isSlowTime = true;
+        isHit = true;
     }
     public void SetplayerSpeedReduceBulletTouch(float reduceSpeed, float maxTime)
     {
@@ -89,12 +86,12 @@ public class PlayerMovement : MonoBehaviour
             flt_CurrentSlowTime = 0;
         }
 
-        isSlowTime = true;
+        isHit = true;
     }
 
     private void HandlingTriggerObstacle()
     {
-        if (!isSlowTime)
+        if (!isHit)
         {
             return;
         }
@@ -109,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
         flt_MaxSlowTime = 0;
         flt_CurrentMovementSpeed = flt_MovementSpeed;
         flt_CurrentSlowTime = 0;
-        isSlowTime = false;
+        isHit = false;
     }
     #endregion
 
@@ -135,9 +132,8 @@ public class PlayerMovement : MonoBehaviour
    
     private void PlayerMotion()
     {
-       
-       
-        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RoatatingSpeed * Time.deltaTime);
+        
+        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotatingSpeed * Time.deltaTime);
         transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0 );
         
         transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
@@ -145,11 +141,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void ReduceSpeed()
     {
-        if (isPlayerMove)
-        {
-            return;
-        }
-
+       
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
 
         playerRb.velocity = new Vector3(0 , 0, 0);

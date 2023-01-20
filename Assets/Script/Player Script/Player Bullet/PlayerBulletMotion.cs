@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerBulletMotion : MonoBehaviour
 {
     [SerializeField] private float flt_BulletSpeed;
-    [SerializeField] private float flt_CurrentDamage;
-    [SerializeField] private float persnatageOfReduceSpeed;
-    [SerializeField] private float maxTime;
+     private float flt_CurrentDamage;
+    private float persnatageOfReduceSpeed;
+     private float maxTime;
    
     private string tag_Enemy = "Enemy";
     private string tag_Obstracles = "Obstacles";
@@ -32,7 +32,7 @@ public class PlayerBulletMotion : MonoBehaviour
            
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamageOfEnemy(flt_CurrentDamage);
+                enemyHealth.TakeDamage(flt_CurrentDamage);
                 other.gameObject.GetComponent<enemyMovement>().SetBulletTrigger(persnatageOfReduceSpeed, maxTime);
             }
         }
@@ -48,6 +48,6 @@ public class PlayerBulletMotion : MonoBehaviour
 
     private void BulletMovment()
     {
-        transform.Translate(-transform.forward * flt_BulletSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * flt_BulletSpeed * Time.deltaTime);
     }
 }

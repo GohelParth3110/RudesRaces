@@ -4,27 +4,18 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int max_playerHealth;
+    [SerializeField] private int flt_MaxPlayerHealth;
     [SerializeField] private float flt_CurrentPlayerHealth;
-   
-    private PlayerMovement playerMovement;
 
 
     void Start()
     {
-        flt_CurrentPlayerHealth = max_playerHealth;
-      
-        playerMovement = GetComponent<PlayerMovement>();
+        flt_CurrentPlayerHealth = flt_MaxPlayerHealth;  
     }
 
     #region DamageHandling
-    public void TakeDamageOfPlayer(float Damage)
-    {
-        if (!playerMovement.GetIsPlayerMove())
-        {
-            return;
-        }
-        
+    public void TakeDamage(float Damage)
+    {             
         flt_CurrentPlayerHealth -= Damage;
         if (flt_CurrentPlayerHealth<=0)
         {

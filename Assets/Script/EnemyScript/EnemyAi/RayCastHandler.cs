@@ -4,35 +4,36 @@ using UnityEngine;
 
 public class RayCastHandler : MonoBehaviour
 {
-    [SerializeField] private  bool isCenterRaycast;
-    [SerializeField] private bool isleftRayCast;
-    [SerializeField] private bool isRightRaycast;
-    [SerializeField] private bool isLeftRaycastBoundry;
-    [SerializeField] private bool isRightRayCastBoundry;
-    [SerializeField] private int input;
-    [SerializeField] private int index;
+   
     [SerializeField] private  Transform[] all_Transform;           // 0-center ,1 - left ,2 - right,1- leftBoundry,2- rightBoundry
-    [SerializeField] private float flt_Range;
+    private float flt_Range;
     [SerializeField] private float flt_StraightRange;
     [SerializeField] private float flt_AnglRange;
-  
     [SerializeField] private float  flt_Left_Boundry;
     [SerializeField] private float flt_Right_Boundry;
-    [SerializeField] private GameObject hit_Gameobject;
-    [SerializeField] private LayerMask interactiveLayers;
-    [SerializeField] private float leftDistance;
-    [SerializeField] private float rightDistance;
     [SerializeField] private LayerMask interRectiveLayerForTakeOverEnemy;
     [SerializeField] private float flt_RangeOfTakeOverEnemy;
-  
+    private GameObject hit_Gameobject;
+    [SerializeField] private LayerMask interactiveLayers;
+    private float leftDistance;
+    private float rightDistance;
+    private bool isCenterRaycast;
+    private bool isleftRayCast;
+    private bool isRightRaycast;
+    private bool isLeftRaycastBoundry;
+    private bool isRightRayCastBoundry;
+    private int input;
+    private int index;
+
+
 
 
     private void FixedUpdate()
     {
-        //if (!PlayerManager.instance.GetPlayerStatus())
-        //{
-        //    return;
-        //}
+        if (!PlayerManager.instance.GetPlayerStatus())
+        {
+            return;
+        }
         GetInput();
         CheckingAllRaycast();
         CheckingTurnOver();
@@ -64,7 +65,7 @@ public class RayCastHandler : MonoBehaviour
                    
                     if (!isLeftRaycastBoundry && isRightRayCastBoundry)
                     {
-                        Debug.Log(transform.name + "SidecutEnemy");
+                       
                         input = -1;
                         index = 0;
                     }
@@ -108,13 +109,13 @@ public class RayCastHandler : MonoBehaviour
 
                 else if (isRightRayCastBoundry && isRightRaycast && !isLeftRaycastBoundry)
                 {
-                    Debug.Log("Center and Right Boundry Somthig left boundry space");
+                   
                     input = -1;
                     index = 1;
                 }
                 else if (isLeftRaycastBoundry && isleftRayCast && !isRightRayCastBoundry)
                 {
-                    Debug.Log("Center and Left Boundry Somthig Right Boundry Space");
+                   
                     input = 1;
                     index = 1;
                 }
@@ -124,7 +125,7 @@ public class RayCastHandler : MonoBehaviour
                     {
                         if (hit_Gameobject.CompareTag("Obstacles"))
                         {
-                            Debug.Log("Distance Chcek");
+                           
                             leftDistance = Mathf.Abs
                             (hit_Gameobject.transform.position.x - flt_Left_Boundry);
                             rightDistance = Mathf.Abs
@@ -187,7 +188,7 @@ public class RayCastHandler : MonoBehaviour
             {
                 if (isLeftRaycastBoundry &&  !isRightRayCastBoundry && !isRightRaycast)
                 {
-                    Debug.Log("LeftcAst And Boundry Somthing Rightbiundry false");
+                   
                     index = 1;
                     input = 0;
                 }
@@ -202,7 +203,7 @@ public class RayCastHandler : MonoBehaviour
                 {
                     if (hit_Gameobject != null)
                     {
-                        Debug.Log("LefXCastBoiundry SOMTHING dISTNACScHECK");
+                      
                         float leftDistnce = Mathf.Abs
                         (hit_Gameobject.transform.position.x - flt_Left_Boundry);
                         float rightDistnce = Mathf.Abs

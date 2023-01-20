@@ -5,15 +5,16 @@ using UnityEngine;
 public class EnemyBulletMovement : MonoBehaviour
 {
     [SerializeField] private float flt_enemyBulletSpeed;
-    [SerializeField] private float flt_DamageOfBullet;
+    private float flt_DamageOfBullet;
+ 
+    private float flt_ReduceSpeedInPercentage;
+    private float flt_MaxTimeToReduceSpeed;
+
+    // tags
     private string tag_Player = "Player";
     private string tag_Obstracles = "Obstacles";
     private string tag_Enemy = "Enemy";
-    [SerializeField] private float flt_PersantageReduceSpeed;
-    [SerializeField] private float flt_MaxTimeToReduceSpeed;
 
-   
-    
     void Update()
     {
         BulletMotion();
@@ -28,8 +29,8 @@ public class EnemyBulletMovement : MonoBehaviour
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamageOfPlayer(flt_DamageOfBullet);
-                other.GetComponent<PlayerMovement>().SetplayerSpeedReduceBulletTouch(flt_PersantageReduceSpeed, flt_MaxTimeToReduceSpeed);
+                playerHealth.TakeDamage(flt_DamageOfBullet);
+                other.GetComponent<PlayerMovement>().SetplayerSpeedReduceBulletTouch(flt_ReduceSpeedInPercentage, flt_MaxTimeToReduceSpeed);
             }
         }
         if (other.gameObject.CompareTag(tag_Obstracles))
@@ -44,8 +45,8 @@ public class EnemyBulletMovement : MonoBehaviour
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamageOfEnemy(flt_DamageOfBullet);
-                other.GetComponent<enemyMovement>().SetBulletTrigger(flt_PersantageReduceSpeed, flt_MaxTimeToReduceSpeed);
+                enemyHealth.TakeDamage(flt_DamageOfBullet);
+                other.GetComponent<enemyMovement>().SetBulletTrigger(flt_ReduceSpeedInPercentage, flt_MaxTimeToReduceSpeed);
             }
         }
 
@@ -58,7 +59,7 @@ public class EnemyBulletMovement : MonoBehaviour
     public void SetBulletProperites(float damage, float reduceSpeed,float maxTime)
     {
         flt_DamageOfBullet = damage;
-        flt_PersantageReduceSpeed = reduceSpeed;
+        flt_ReduceSpeedInPercentage = reduceSpeed;
         flt_MaxTimeToReduceSpeed = maxTime;
     }
     #endregion
@@ -67,7 +68,7 @@ public class EnemyBulletMovement : MonoBehaviour
     #region BulletMotion
     private void BulletMotion()
     {
-        transform.Translate(-transform.forward * flt_enemyBulletSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * flt_enemyBulletSpeed * Time.deltaTime);
     }
     #endregion
 }

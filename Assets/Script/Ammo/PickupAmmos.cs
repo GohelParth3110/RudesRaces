@@ -10,7 +10,6 @@ public class PickupAmmos : MonoBehaviour
     [SerializeField] private Collider colliderAmmo;
     private bool  isBody = true;
     private float flt_CurrnetTimeToReSetSystem;
-
     private string tag_Player = "Player";
     private string tag_Enemy = "Enemy";
 

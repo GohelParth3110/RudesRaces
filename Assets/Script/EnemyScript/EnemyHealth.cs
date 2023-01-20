@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] private int max_EnemyHealth;
+    [SerializeField] private int flt_MaxHealth;
     [SerializeField] private float flt_CurrentEnemyHealth;
   
     private enemyMovement enemyMovement;
@@ -12,17 +12,14 @@ public class EnemyHealth : MonoBehaviour
     private void Start()
     {
        
-        flt_CurrentEnemyHealth = max_EnemyHealth;
+        flt_CurrentEnemyHealth = flt_MaxHealth;
         enemyMovement = GetComponent<enemyMovement>();
     }
 
     #region DamageHandling
-    public void TakeDamageOfEnemy(float Damage)
+    public void TakeDamage(float Damage)
     {
-        if (!enemyMovement.GetIsEnemyMove())
-        {
-            return;
-        }
+     
         flt_CurrentEnemyHealth -= Damage;
         if (flt_CurrentEnemyHealth<=0)
         {

@@ -6,29 +6,30 @@ using UnityEngine;
 public class enemyMovement : MonoBehaviour
 {
     [Header("Properties Of EnemyMotion")]
-    [SerializeField] private float flt_RateOfReduceSpeed;
+    [SerializeField] private float flt_RateOfReduceSpeed;    // when raceOver time
     [SerializeField] private float[] all_RotationAngle;          // angleRotateWith index whene Ai Logic Time
     [SerializeField] private float[] all_RotationalSpeed;        // rotationspeed WithIndeex When Ai LogicTime
-    [SerializeField] private float flt_RotationalSpeed;         // currentRotation Speed
-    [SerializeField] private float flt_RotationAngle;       // currentRotation Angle
+    private float flt_RotationalSpeed;         // currentRotation Speed
+    private float flt_RotationAngle;       // currentRotation Angle
     [SerializeField] private  float flt_MovementSpeed;          // ForwordMovementSpeed
-    [SerializeField] private float flt_CurrentMovementSpeed;  // CurrentMovementSpeed
+    private float flt_CurrentMovementSpeed;  // CurrentMovementSpeed
     [SerializeField] private float offset;                      // this offset Angle is When TargetAngle And CurrnetAngle sametime
-    [SerializeField] private bool isGetnput = true;             // this bool get Data Raycast input Get Or Not
-    [SerializeField] private bool isSetPosition = false;        // geting Data Of Raycast Set Angle Posiotion or not 
-    private bool isSetMaxAngle = false;                         // this bool Set TargetAngle
-    [SerializeField] private float flt_TargetAngle;                               
-    [SerializeField] float flt_CurrentAngle;
-    [SerializeField] int currentInput;
-    [SerializeField] int currentIndex;
-    [SerializeField] private bool isEnemyMove;
+    private bool shouldTakeRaycastInput = true;             // this bool get Data Raycast input Get Or Not
+    private bool hasReachedTargetRotation = false;        // geting Data Of Raycast Set Angle Posiotion or not 
+    private bool isChangingDirection = false;                         // this bool Set TargetAngle
+    private float flt_TargetAngle;                               
+    private float flt_CurrentAngle;
+    private  int currentInput;
+    private  int currentIndex;
     private RayCastHandler rayCastHandler;
+    
+    [Header("Components")]
     private Rigidbody enemyRb;
 
     [Header("Data Of Trigger of Something")]
-    [SerializeField] private bool isSlowTime;
-    [SerializeField] private float flt_CurrentSlowTime;
-    [SerializeField] private float flt_MaxSlowTime; 
+    private bool isHit;
+    private float flt_CurrentSlowTime;
+    private float flt_MaxSlowTime; 
 
 
     
@@ -45,7 +46,8 @@ public class enemyMovement : MonoBehaviour
         {
             return;
         }
-        ReduceSpeed();
+
+        //ReduceSpeed();
         GetInput();
         GetPosition();
         EnemyMotion();
@@ -53,17 +55,6 @@ public class enemyMovement : MonoBehaviour
       
     }
 
-    #region Properites
-    public bool GetIsEnemyMove()
-    {
-        return isEnemyMove;
-    }
-    public void SetIsEnemyMove(bool value)
-    {
-        isEnemyMove = value;
-    }
-   
-    #endregion
 
     #region Enemy Trigger Obstckle
     public void SetReduceSpeedWhenTriggerObstackle(float Speed ,float time)
@@ -85,7 +76,7 @@ public class enemyMovement : MonoBehaviour
             flt_CurrentSlowTime = 0;
         }
 
-        isSlowTime = true;
+        isHit = true;
     }
     public void SetBulletTrigger(float reducedSpeedPercentage, float slowTime)
     {
@@ -103,15 +94,16 @@ public class enemyMovement : MonoBehaviour
             flt_CurrentSlowTime = 0;
         }
 
-        isSlowTime = true;
+        isHit = true;
     }
 
     private void HandlingReduceSpeedofObstacle()
     {
-        if (!isSlowTime)
+        if (!isHit)
         {
             return;
         }
+
         flt_CurrentSlowTime += Time.deltaTime;
         if (flt_CurrentSlowTime > flt_MaxSlowTime)
         {
@@ -124,7 +116,7 @@ public class enemyMovement : MonoBehaviour
         flt_CurrentMovementSpeed = flt_MovementSpeed;
         flt_CurrentSlowTime = 0;
         flt_MaxSlowTime = 0;
-        isSlowTime = false;
+        isHit = false;
     }
 
     #endregion
@@ -133,75 +125,75 @@ public class enemyMovement : MonoBehaviour
     #region AI Logic
     private void GetInput()
     {
-        if (!isGetnput)
+        if (!shouldTakeRaycastInput)
         {
             return;
         }
-        if (rayCastHandler.GetInputOfEnemy() == 0 && isGetnput)
+        if (rayCastHandler.GetInputOfEnemy() == 0 && shouldTakeRaycastInput)
         {
             currentInput = 0;
         }
         else
         {
            
-            isGetnput = false;
+            shouldTakeRaycastInput = false;
             currentInput = rayCastHandler.GetInputOfEnemy();
             currentIndex = rayCastHandler.GetIndexOfRaycast();
             flt_RotationalSpeed =  all_RotationalSpeed[currentIndex];
             flt_RotationAngle = all_RotationAngle[currentIndex];
-            isSetMaxAngle = true;
+            isChangingDirection = true;
             SetMaxAngle();
         }
     }
 
     private void GetPosition()
     {
-        if (isGetnput)
+        if (shouldTakeRaycastInput)
         {
             return;
         }
 
         if (currentInput == 1 && flt_CurrentAngle > flt_RotationAngle - offset)
         {
-            isSetPosition = true;
+            hasReachedTargetRotation = true;
             currentInput = 0;
-            isSetMaxAngle = true;
+            isChangingDirection = true;
             SetMaxAngle(); 
         }
 
         if (currentInput == -1 && flt_CurrentAngle < -flt_RotationAngle + offset)
         {
-            isSetPosition = true;
+            hasReachedTargetRotation = true;
             currentInput = 0;
-            isSetMaxAngle = true;
+            isChangingDirection = true;
             SetMaxAngle();
         }
 
-        if (isSetPosition && flt_CurrentAngle > 0 && flt_CurrentAngle < 5)
+        if (hasReachedTargetRotation && flt_CurrentAngle > 0 && flt_CurrentAngle < 5)
         {
             transform.localEulerAngles = new Vector3(0, 0, 0);
             flt_CurrentAngle = 0;
             flt_TargetAngle = 0;
-            isGetnput = true;
-            isSetMaxAngle = false;
+            shouldTakeRaycastInput = true;
+            isChangingDirection = false;
             SetMaxAngle();
-            isSetPosition = false; 
+            hasReachedTargetRotation = false; 
         }
-        if (isSetPosition && flt_CurrentAngle < 0 && flt_CurrentAngle > -5)
+        if (hasReachedTargetRotation && flt_CurrentAngle < 0 && flt_CurrentAngle > -5)
         {
             transform.localEulerAngles = new Vector3(0, 0, 0);
             flt_CurrentAngle = 0;
             flt_TargetAngle = 0;
-            isGetnput = true;
-            isSetMaxAngle = false;
+            shouldTakeRaycastInput = true;
+            isChangingDirection = false;
             SetMaxAngle();
-            isSetPosition = false;
+            hasReachedTargetRotation = false;
         }
     }
     
     private void SetMaxAngle()
     {
-        if (isSetMaxAngle)
+        if (isChangingDirection)
         {
             enemyRb.velocity = new Vector3(0, 0, 0);
             if (currentInput > 0)
@@ -216,7 +208,7 @@ public class enemyMovement : MonoBehaviour
             {
                 flt_TargetAngle = 0;
             }
-            isSetMaxAngle = false;
+            isChangingDirection = false;
         }
     }
 
@@ -233,10 +225,7 @@ public class enemyMovement : MonoBehaviour
 
     private void ReduceSpeed()
     {
-        if (isEnemyMove)
-        {
-            return;
-        }
+       
 
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
         enemyRb.velocity = new Vector3(0, 0, 0);
