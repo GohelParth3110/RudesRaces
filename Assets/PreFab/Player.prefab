@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1973475140}
   - component: {fileID: 1973475139}
   - component: {fileID: 8221572385629903167}
-  - component: {fileID: 7214041578785949034}
   - component: {fileID: 1908797684549411130}
   - component: {fileID: 6713150047096860771}
+  - component: {fileID: 5458428437311743100}
+  - component: {fileID: 8032367463503388026}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -51,15 +52,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a9dc41109c7e94b88e9b81e8443c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flt_RateOfReduceSpeed: 1
-  flt_MovementSpeed: 20
+  flt_MovementSpeed: 8
   flt_CurrentMovementSpeed: 0
   flt_RotatingAngle: 25
-  flt_RoatatingSpeed: 2
-  isPlayerMove: 0
+  flt_RotatingSpeed: 5
+  isPlayerFinishedRace: 0
+  flt_RateOfReduceSpeed: 1
   flt_MaxSlowTime: 0
   flt_CurrentSlowTime: 0
-  isSlowTime: 0
+  isHit: 0
 --- !u!114 &1973475140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,14 +74,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_Bullet: {fileID: 6864543428257938893, guid: 0a8a6500fab790c4983ace43dcbafd8e, type: 3}
-  damageOfBullet: 100
-  flt_PersantageReduceSpeed: 30
-  flt_MaxTimeToReduceSpeed: 2
-  flt_CurrentSpawnBulletTime: 0
-  flt_BulletFirerate: 0.2
-  bulletSpawnPoint: {fileID: 2095069096284390345}
   bulletSpawnPostion: {fileID: 2095069096284390345}
   tower: {fileID: 2290333547029461315}
+  damageOfBullet: 100
+  flt_ReduceSpeedInPercentage: 0
+  flt_MaxTimeToReduceSpeed: 2
 --- !u!114 &1973475139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d6c184deb6b5a4397d2bbbede020ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_playerHealth: 100
+  flt_MaxPlayerHealth: 100
   flt_CurrentPlayerHealth: 0
 --- !u!114 &8221572385629903167
 MonoBehaviour:
@@ -108,20 +106,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammo: 100
---- !u!114 &7214041578785949034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2137304074143318123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eba028dbe1f7c44809e3090a2b0011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayer: 1
-  thisCollider: {fileID: 6713150047096860771}
 --- !u!54 &1908797684549411130
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -135,9 +119,9 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 84
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &6713150047096860771
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -151,6 +135,30 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.3, y: 1.6, z: 2}
   m_Center: {x: 0, y: 0.8, z: 0.5}
+--- !u!114 &5458428437311743100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137304074143318123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6150d656bf76f4242882fcafe27ca5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8032367463503388026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137304074143318123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9dd5289990acee468db5781d0bf363c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2137304074145545698
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +203,7 @@ GameObject:
   - component: {fileID: 2294255458287049701}
   - component: {fileID: 2096739985310064817}
   - component: {fileID: 2097922921408429549}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fireplace_blended
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5020,7 +5028,7 @@ GameObject:
   - component: {fileID: 2282762347276214785}
   - component: {fileID: 2273447791224666813}
   - component: {fileID: 2200452145413999739}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_Flame_tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5122,7 +5130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2294392154486746199}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_sniper_tower_jnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5156,7 +5164,7 @@ GameObject:
   - component: {fileID: 2290333547029461315}
   - component: {fileID: 2283223071252777695}
   - component: {fileID: 2273251588808163565}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_flame_tower_pivot_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5240,7 +5248,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2290415530400122949}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_Flame_tank_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5274,7 +5282,7 @@ GameObject:
   - component: {fileID: 2290195900474534269}
   - component: {fileID: 2097258748720864629}
   - component: {fileID: 2097704544985999647}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fireplace_additive (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10098,7 +10106,7 @@ GameObject:
   - component: {fileID: 2290332290453144431}
   - component: {fileID: 2118918003820552879}
   - component: {fileID: 2097868009893116673}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fireplace_additive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14922,7 +14930,7 @@ GameObject:
   - component: {fileID: 2294458259838710785}
   - component: {fileID: 2282701484735787789}
   - component: {fileID: 2273082060314329703}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShootElement (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15003,7 +15011,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2290457933583963881}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_flame_FX_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15037,7 +15045,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2290298602304298249}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GB_sniper_root_jnt4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15102,7 +15110,6 @@ GameObject:
   - component: {fileID: 3279787419616703661}
   - component: {fileID: 8838651807462676009}
   - component: {fileID: 5841149845807579462}
-  - component: {fileID: 8412070477603156263}
   m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
@@ -15175,16 +15182,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8412070477603156263
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411694320464007385}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

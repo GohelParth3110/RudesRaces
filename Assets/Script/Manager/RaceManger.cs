@@ -42,10 +42,7 @@ public class RaceManger : MonoBehaviour
         return total_Postion;
     }
 
-    public void RemoveGameObjectInList(GameObject current)
-    {
-        list_Racers.Remove(current);
-    }
+   
 
 
   
@@ -75,6 +72,7 @@ public class RaceManger : MonoBehaviour
 
         CalculateTime();
         LiveStatus();
+        ShortingDataAsperTime();
         raceEndPosition = levelManagement.GetEndPostion();
 
     }
@@ -109,13 +107,36 @@ public class RaceManger : MonoBehaviour
             distnce[i] = raceEndPosition.z - list_Racers[i].transform.position.z;
         }
     }
+    private void ShortingDataAsperTime()
+    {
+        for (int i = 0; i < distnce.Length; i++)
+        {
+            for (int j = i + 1; j < distnce.Length; j++)
+            {
+
+                if (distnce[i] < distnce[j])
+                {
+
+                    float swap;
+                    GameObject swapSurvive;
+                    swap = distnce[j];
+                    swapSurvive = list_Racers[j];
+                    distnce[j] = distnce[i];
+                    list_Racers[j] = list_Racers[i];
+                    distnce[i] = swap;
+                    list_Racers[i] = swapSurvive;
+                }
+
+            }
+        }
+    }
     private void CalculateTime()
     {
        
         currentTime += Time.deltaTime;
 
     }
-    public void PlayerFinishedRace(string name, bool isplayer)
+    public void FinishedRace(string name, bool isplayer)
     {
         list_RacerName.Add(name);
         list_RacerCompleteTime.Add(currentTime);
@@ -123,6 +144,7 @@ public class RaceManger : MonoBehaviour
         if (isplayer)
         {
             playerRank = noOfPlayerCompleteRace;
+            PlayerManager.instance.GetCinemachineVirtualCamera().Follow = null;
         }
         if (noOfPlayerCompleteRace >= list_Racers.Count)
         {

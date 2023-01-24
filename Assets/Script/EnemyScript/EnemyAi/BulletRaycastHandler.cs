@@ -54,7 +54,7 @@ public class BulletRaycastHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (ammoSystem.GetAmmo() <= 0)
+        if (ammoSystem.GetAmmo() <= 0 && enemyShooting.enabled)
         {
             shouldBeInDefaultState = true;
             return;

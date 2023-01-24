@@ -468,9 +468,9 @@ GameObject:
   - component: {fileID: 1773886429}
   - component: {fileID: 1773886430}
   - component: {fileID: 4705822003604071129}
-  - component: {fileID: -4261158828219681330}
   - component: {fileID: 53070933}
   - component: {fileID: 53070932}
+  - component: {fileID: 120440351137059546}
   m_Layer: 8
   m_Name: Enemy1
   m_TagString: Enemy
@@ -517,7 +517,7 @@ MonoBehaviour:
   - 2
   - 5
   - 5
-  flt_MovementSpeed: 20
+  flt_MovementSpeed: 8
   offset: 5
 --- !u!114 &1730985824999638077
 MonoBehaviour:
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ce24568b5da1a48a6f759dae038978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_EnemyHealth: 100
+  flt_MaxHealth: 100
   flt_CurrentEnemyHealth: 100
 --- !u!114 &1773886429
 MonoBehaviour:
@@ -628,20 +628,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammo: 1000
---- !u!114 &-4261158828219681330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1730985824999638071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eba028dbe1f7c44809e3090a2b0011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayer: 0
-  thisCollider: {fileID: 53070932}
 --- !u!54 &53070933
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -671,6 +657,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2, z: 2}
   m_Center: {x: 0, y: 1, z: 0.3}
+--- !u!114 &120440351137059546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730985824999638071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ecbaf39f4d43149a881cb5cfcc8230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1730985825262685065
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,6 +29,11 @@ public class PlayerManager : MonoBehaviour
         cinemachineVirtualCamera.Follow = currenPlayer.transform;
         isPlayerLive = true;
     }
+
+    public CinemachineVirtualCamera GetCinemachineVirtualCamera()
+    {
+        return cinemachineVirtualCamera;
+    }
     public GameObject GetPlayer()
     {
         return currenPlayer;

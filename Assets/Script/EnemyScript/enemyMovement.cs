@@ -21,10 +21,12 @@ public class enemyMovement : MonoBehaviour
     private float flt_CurrentAngle;
     private  int currentInput;
     private  int currentIndex;
-    private RayCastHandler rayCastHandler;
+    private bool isFinishedRace;
+   
     
     [Header("Components")]
     private Rigidbody enemyRb;
+    private RayCastHandler rayCastHandler;
 
     [Header("Data Of Trigger of Something")]
     private bool isHit;
@@ -38,7 +40,7 @@ public class enemyMovement : MonoBehaviour
         enemyRb = GetComponent<Rigidbody>();
         rayCastHandler = GetComponent<RayCastHandler>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
-      
+    
     }
     private void Update()
     {
@@ -46,16 +48,34 @@ public class enemyMovement : MonoBehaviour
         {
             return;
         }
+        if (isFinishedRace)
+        {
+            ReduceSpeed();
+            EnemyMotion();
+        }
+        else
+        {
+            GetInput();
+            GetPosition();
+            EnemyMotion();
+            HandlingReduceSpeedofObstacle();
+        }
 
-        //ReduceSpeed();
-        GetInput();
-        GetPosition();
-        EnemyMotion();
-        HandlingReduceSpeedofObstacle();
-      
     }
 
 
+    public void ResetEnemyMoveMent()
+    {
+        isHit = false;
+        flt_CurrentMovementSpeed = flt_MovementSpeed;
+        isFinishedRace = false;
+        flt_CurrentSlowTime = 0;
+        flt_MaxSlowTime = 0;
+    }
+    public void SetEnemyStatus(bool isEnemyFinishRace)
+    {
+        isFinishedRace = isEnemyFinishRace;
+    }
     #region Enemy Trigger Obstckle
     public void SetReduceSpeedWhenTriggerObstackle(float Speed ,float time)
     {
@@ -225,8 +245,8 @@ public class enemyMovement : MonoBehaviour
 
     private void ReduceSpeed()
     {
-       
 
+        Debug.Log("ReduceSpeed");
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
         enemyRb.velocity = new Vector3(0, 0, 0);
         enemyRb.angularVelocity = new Vector3(0, 0, 0);

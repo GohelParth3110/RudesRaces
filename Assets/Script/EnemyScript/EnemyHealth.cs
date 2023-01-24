@@ -6,26 +6,46 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int flt_MaxHealth;
     [SerializeField] private float flt_CurrentEnemyHealth;
-  
-    private enemyMovement enemyMovement;
+    private Collider thisCollider;
+    private TriggerInteractionEnemy TriggerInteractionEnemy;
+    
+    
 
     private void Start()
     {
-       
+        thisCollider = GetComponent<Collider>();
         flt_CurrentEnemyHealth = flt_MaxHealth;
-        enemyMovement = GetComponent<enemyMovement>();
+        TriggerInteractionEnemy = GetComponent<TriggerInteractionEnemy>();
     }
 
-    #region DamageHandling
+   
     public void TakeDamage(float Damage)
     {
      
         flt_CurrentEnemyHealth -= Damage;
         if (flt_CurrentEnemyHealth<=0)
         {
-            RaceManger.instance.RemoveGameObjectInList(this.gameObject);
-            Destroy(gameObject, 0.5f);
+            thisCollider.enabled = false;
+            TriggerInteractionEnemy.GetEnemyMoveMent().enabled = false;
+            TriggerInteractionEnemy.GetEnemyShooting().enabled = false;
+            StartCoroutine(ResetEnemy());
         }
     }
-    #endregion
+
+    IEnumerator ResetEnemy()
+    {
+        yield return new WaitForSeconds(1);
+        flt_CurrentEnemyHealth = flt_MaxHealth;
+        thisCollider.enabled = true;
+        TriggerInteractionEnemy.GetEnemyMoveMent().enabled = true;
+        TriggerInteractionEnemy.GetEnemyShooting().enabled = true;
+        TriggerInteractionEnemy.GetEnemyMoveMent().ResetEnemyMoveMent();
+        
+    }
+   public Collider GetCollider()
+    {
+        return thisCollider;
+       
+    }
+   
 }

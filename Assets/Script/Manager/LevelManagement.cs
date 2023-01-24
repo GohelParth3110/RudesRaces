@@ -11,23 +11,22 @@ public class LevelManagement : MonoBehaviour
     [SerializeField] private int line;
     [SerializeField] private GameObject Grass;
     [SerializeField] private float yPostion;
+
     [Header("Paroprites Of Ground")]
-   
+    [SerializeField] private GameObject startGround;
     [SerializeField] private GameObject road;
     [SerializeField] private Transform transform_PlaceWhereRoadSpawn;
-    [SerializeField] private Vector3 spawnPostion = new Vector3(0, 0, 0);
-    [SerializeField] private float flt_LengthRoad;
     [SerializeField] private float flt_DiatanceBetweenTwoRoad = 1.5f;
     [SerializeField] private float flt_LevelLength;
     [SerializeField] private Transform transform_StartLevel;
     [SerializeField] private Transform transform_EndLevel;
-    [SerializeField] private Transform transform_Player;
     [SerializeField] private float flt_ExtraGroundLength;        // this value get extra ground after winning line
-    [SerializeField] private float flt_OffsetStartGround;       // this value get extra ground before Start Ground
     [SerializeField] private float flt_BoundryPositionOffset;
     [SerializeField] private float flt_BoundryPositionY;
     [SerializeField] private Transform transform_LeftBoundry;
     [SerializeField] private Transform transform_RightBoundry;
+    private Vector3 spawnPostion = new Vector3(0, 0, 0);
+    private float flt_LengthRoad;
 
 
     [Header("PropPerites Of Obstackle")]
@@ -66,7 +65,7 @@ public class LevelManagement : MonoBehaviour
       
         SetRaceEndPostion();
         SpawnGround();
-        SpawnGrass();
+       // SpawnGrass();
         SpawnObstackle();
         SpawnAmmo();
 
@@ -99,8 +98,15 @@ public class LevelManagement : MonoBehaviour
     }
     private void SpawnGround()
     {
+        spawnPostion = new Vector3(-73.25f, 0, 5);
+        for (int i = 0; i < RaceManger.instance.GetNoOfRacerPostionInGame(); i++)
+        {
+           
+            Instantiate(startGround, spawnPostion, transform.rotation,transform_PlaceWhereRoadSpawn);
+            spawnPostion += new Vector3(14.65f, 0, 0);
+        }
         flt_LengthRoad = flt_LevelLength  + flt_ExtraGroundLength;
-        spawnPostion = new Vector3(0, 0, -flt_OffsetStartGround);
+        spawnPostion = new Vector3(0, 0,10);
 
             while (spawnPostion.z < flt_LengthRoad)
             {

@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float flt_CurrentMovementSpeed;  // current movement speed
     [SerializeField] private float flt_RotatingAngle;  // RotatingAngle
     [SerializeField] private float flt_RotatingSpeed; //  RotationSpeed
+   [SerializeField] private bool isPlayerFinishedRace;
 
     [Header("Game Data")]
     [SerializeField] private float flt_RateOfReduceSpeed;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
    
     void Start()
     {
+       
         playerRb = GetComponent<Rigidbody>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
        
@@ -35,18 +37,40 @@ public class PlayerMovement : MonoBehaviour
   
     void Update()
     {
-        if (!RaceManger.instance.GetRaceStatus())
+        //if (!RaceManger.instance.GetRaceStatus())
+        //{
+        //    return;
+        //}
+        if (isPlayerFinishedRace)
         {
-            return;
+            ReduceSpeed();
+            PlayerMotion(); //we also check playerRb Move Rotation Also
         }
+        else if (!isPlayerFinishedRace)
+        {
+            GetInput();
+            PlayerMotion(); //we also check playerRb Move Rotation Also
+            HandlingTriggerObstacle();
+        }
+        
        
-        GetInput();
-        PlayerMotion(); //we also check playerRb Move Rotation Also
-        HandlingTriggerObstacle();
+      
     }
     #region PlayerProperites
 
-   
+   public void SetPlayerRaceStatus(bool  isplayerfinishRace)
+    {
+        isPlayerFinishedRace = isplayerfinishRace;
+    }
+
+    public void ResetPlayerMoveMent()
+    {
+        isHit = false;
+        flt_CurrentMovementSpeed = flt_MovementSpeed;
+        isPlayerFinishedRace = false;
+        flt_CurrentSlowTime = 0;
+        flt_MaxSlowTime = 0;
+    }
    
     #endregion
 
@@ -135,11 +159,13 @@ public class PlayerMovement : MonoBehaviour
         
         flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotatingSpeed * Time.deltaTime);
         transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0 );
+
+       
         
-        transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
+       transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
 
     }
-    private void ReduceSpeed()
+    public void ReduceSpeed()
     {
        
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
