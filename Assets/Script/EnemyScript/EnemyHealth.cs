@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [SerializeField] private GameObject particle_ShieldVFX;
+    [SerializeField] private GameObject particle_DieVfx;
     [SerializeField] private int flt_MaxHealth;
     [SerializeField] private float flt_CurrentEnemyHealth;
+    [SerializeField] private GameObject body;
     private Collider thisCollider;
     private TriggerInteractionEnemy TriggerInteractionEnemy;
     
@@ -25,6 +28,8 @@ public class EnemyHealth : MonoBehaviour
         flt_CurrentEnemyHealth -= Damage;
         if (flt_CurrentEnemyHealth<=0)
         {
+            Instantiate(particle_DieVfx, transform.position, transform.rotation);
+            body.SetActive(false);
             thisCollider.enabled = false;
             TriggerInteractionEnemy.GetEnemyMoveMent().enabled = false;
             TriggerInteractionEnemy.GetEnemyShooting().enabled = false;
@@ -36,11 +41,22 @@ public class EnemyHealth : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         flt_CurrentEnemyHealth = flt_MaxHealth;
-        thisCollider.enabled = true;
+     
+        body.SetActive(true);
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        particle_ShieldVFX.SetActive(true);
+        StartCoroutine(ClosetShieldVfx());
         TriggerInteractionEnemy.GetEnemyMoveMent().enabled = true;
         TriggerInteractionEnemy.GetEnemyShooting().enabled = true;
         TriggerInteractionEnemy.GetEnemyMoveMent().ResetEnemyMoveMent();
         
+    }
+    IEnumerator ClosetShieldVfx()
+    {
+        yield return new WaitForSeconds(1);
+        particle_ShieldVFX.SetActive(false);
+        thisCollider.enabled = true;
+       
     }
    public Collider GetCollider()
     {

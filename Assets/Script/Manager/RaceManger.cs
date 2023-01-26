@@ -41,12 +41,23 @@ public class RaceManger : MonoBehaviour
     {
         return total_Postion;
     }
-
-   
-
-
+    public int GetPlayerRank()
+    {
+        return playerRank;
+    }
+    public List<string> GetListOfRacerName()
+    {
+        return list_RacerName;
+    }
+    public List<float> GetListOfRacertime()
+    {
+        return list_RacerCompleteTime;
+    }
   
-
+    public LevelManagement GetCurrentLevel()
+    {
+        return levelManagement;
+    }
 
     #endregion
 
@@ -82,7 +93,7 @@ public class RaceManger : MonoBehaviour
         PlayerManager.instance.SpawnPlayer();
         PlayerManager.instance.GetPlayer().transform.position = list_RaceStartPositions[index].position;
         list_Racers.Add(PlayerManager.instance.GetPlayer());
-        
+
         list_RaceStartPositions.RemoveAt(index);
 
         for (int i = 1; i < noOfRacerToSpawn; i++)
@@ -149,6 +160,7 @@ public class RaceManger : MonoBehaviour
         if (noOfPlayerCompleteRace >= list_Racers.Count)
         {
             Debug.Log("GameOver");
+            UiManager.instance.GetUiGameOverScreen().gameObject.SetActive(true);
             hasRaceStarted = false;
         }
 

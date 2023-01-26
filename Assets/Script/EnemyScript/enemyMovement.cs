@@ -14,14 +14,21 @@ public class enemyMovement : MonoBehaviour
     [SerializeField] private  float flt_MovementSpeed;          // ForwordMovementSpeed
     private float flt_CurrentMovementSpeed;  // CurrentMovementSpeed
     [SerializeField] private float offset;                      // this offset Angle is When TargetAngle And CurrnetAngle sametime
+    [SerializeField]
     private bool shouldTakeRaycastInput = true;             // this bool get Data Raycast input Get Or Not
     private bool hasReachedTargetRotation = false;        // geting Data Of Raycast Set Angle Posiotion or not 
     private bool isChangingDirection = false;                         // this bool Set TargetAngle
-    private float flt_TargetAngle;                               
+    [SerializeField]
+    private float flt_TargetAngle;
+    [SerializeField]
     private float flt_CurrentAngle;
+    [SerializeField]
     private  int currentInput;
+    [SerializeField]
     private  int currentIndex;
     private bool isFinishedRace;
+    private float boundry;
+  
    
     
     [Header("Components")]
@@ -40,7 +47,7 @@ public class enemyMovement : MonoBehaviour
         enemyRb = GetComponent<Rigidbody>();
         rayCastHandler = GetComponent<RayCastHandler>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
-    
+        boundry = RaceManger.instance.GetCurrentLevel().GetBoundryPostion();
     }
     private void Update()
     {
@@ -51,19 +58,28 @@ public class enemyMovement : MonoBehaviour
         if (isFinishedRace)
         {
             ReduceSpeed();
-            EnemyMotion();
+           // EnemyMotion();
         }
         else
         {
             GetInput();
             GetPosition();
-            EnemyMotion();
+            //EnemyMotion();
             HandlingReduceSpeedofObstacle();
         }
+
 
     }
 
 
+    private void FixedUpdate()
+    {
+        if (!RaceManger.instance.GetRaceStatus())
+        {
+            return;
+        }
+        EnemyMotion();
+    }
     public void ResetEnemyMoveMent()
     {
         isHit = false;
@@ -100,6 +116,7 @@ public class enemyMovement : MonoBehaviour
     }
     public void SetBulletTrigger(float reducedSpeedPercentage, float slowTime)
     {
+        
         float updatedMovementSpeed = flt_MovementSpeed - (0.01f * flt_MovementSpeed * slowTime);
 
         if (updatedMovementSpeed < flt_CurrentMovementSpeed)
@@ -151,6 +168,7 @@ public class enemyMovement : MonoBehaviour
         }
         if (rayCastHandler.GetInputOfEnemy() == 0 && shouldTakeRaycastInput)
         {
+            
             currentInput = 0;
         }
         else
@@ -175,18 +193,48 @@ public class enemyMovement : MonoBehaviour
 
         if (currentInput == 1 && flt_CurrentAngle > flt_RotationAngle - offset)
         {
-            hasReachedTargetRotation = true;
-            currentInput = 0;
-            isChangingDirection = true;
-            SetMaxAngle(); 
+
+            if (rayCastHandler.GetInputOfEnemy() == 0)
+            {
+                hasReachedTargetRotation = true;
+                currentInput = 0;
+                isChangingDirection = true;
+                SetMaxAngle();
+            }
+            else
+            {
+                
+                currentInput = rayCastHandler.GetInputOfEnemy();
+                currentIndex = rayCastHandler.GetIndexOfRaycast();
+                flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
+                flt_RotationAngle = all_RotationAngle[currentIndex];
+                isChangingDirection = true;
+                SetMaxAngle();
+            }
+         
+           
         }
 
         if (currentInput == -1 && flt_CurrentAngle < -flt_RotationAngle + offset)
         {
-            hasReachedTargetRotation = true;
-            currentInput = 0;
-            isChangingDirection = true;
-            SetMaxAngle();
+            if (rayCastHandler.GetInputOfEnemy() == 0)
+            {
+                hasReachedTargetRotation = true;
+                currentInput = 0;
+                isChangingDirection = true;
+                SetMaxAngle();
+            }
+            else
+            {
+                currentInput = rayCastHandler.GetInputOfEnemy();
+                currentIndex = rayCastHandler.GetIndexOfRaycast();
+                flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
+                flt_RotationAngle = all_RotationAngle[currentIndex];
+                isChangingDirection = true;
+                SetMaxAngle();
+            }
+            
+
         }
 
         if (hasReachedTargetRotation && flt_CurrentAngle > 0 && flt_CurrentAngle < 5)
@@ -215,7 +263,7 @@ public class enemyMovement : MonoBehaviour
     {
         if (isChangingDirection)
         {
-            enemyRb.velocity = new Vector3(0, 0, 0);
+            //enemyRb.velocity = new Vector3(0, 0, 0);
             if (currentInput > 0)
             {
                 flt_TargetAngle = flt_RotationAngle;
@@ -237,21 +285,34 @@ public class enemyMovement : MonoBehaviour
     #region EnemyMotion
     private void EnemyMotion()
     {
-        transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
+        // transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
 
-        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotationalSpeed * Time.deltaTime);
-        transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
+            flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, 
+                                flt_RotationalSpeed * Time.deltaTime);
+            transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
+
+             enemyRb.velocity = transform.forward*flt_CurrentMovementSpeed;
+        if (transform.position.y>0.5)
+        {
+            enemyRb.velocity = -transform.up * flt_CurrentMovementSpeed;
+        }
+
+    
     }
 
     private void ReduceSpeed()
     {
 
-        Debug.Log("ReduceSpeed");
+       
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
         enemyRb.velocity = new Vector3(0, 0, 0);
         enemyRb.angularVelocity = new Vector3(0, 0, 0);
      
 
     }
+
+   
+   
+
     #endregion
 }

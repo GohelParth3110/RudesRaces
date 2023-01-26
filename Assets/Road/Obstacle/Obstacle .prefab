@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e98532228e0646545a862407aab4c528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particle_ObstackleVfx: {fileID: 2584869412621139817, guid: fe06550700dc1424c9c22af30e6a87df, type: 3}
   flt_MaxTimeToReduceSpeed: 2
   flt_damage: 10
   ReduceSpeed: 80

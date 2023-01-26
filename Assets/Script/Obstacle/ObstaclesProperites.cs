@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ObstaclesProperites : MonoBehaviour
 {
+    [Header("Particle Effect")]
+    [SerializeField] private GameObject particle_ObstackleVfx;
+    [Header("Data")]
     [SerializeField] private float flt_MaxTimeToReduceSpeed;
     [SerializeField] private float flt_damage;
     [SerializeField] private float ReduceSpeed;
@@ -19,6 +22,11 @@ public class ObstaclesProperites : MonoBehaviour
     public float GetReduceSpeed()
     {
         return ReduceSpeed;
+    }
+
+    public void playVfx()
+    {
+        Instantiate(particle_ObstackleVfx, transform.position, transform.rotation);
     }
 
 

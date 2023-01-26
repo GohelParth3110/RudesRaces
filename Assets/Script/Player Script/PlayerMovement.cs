@@ -13,12 +13,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float flt_RotatingAngle;  // RotatingAngle
     [SerializeField] private float flt_RotatingSpeed; //  RotationSpeed
    [SerializeField] private bool isPlayerFinishedRace;
+    [SerializeField] private float playerRbMode;
+    private float boundry;
 
     [Header("Game Data")]
     [SerializeField] private float flt_RateOfReduceSpeed;
-    private float flt_TargetAngle;
-    private float flt_CurrentAngle;
-
+    [SerializeField] private float flt_TargetAngle;
+    [SerializeField] private float flt_CurrentAngle;
+   
 
     [Header("ReduceSpeed When Trigger Something")]
     [SerializeField] private float flt_MaxSlowTime;
@@ -32,33 +34,40 @@ public class PlayerMovement : MonoBehaviour
        
         playerRb = GetComponent<Rigidbody>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
-       
+        boundry = RaceManger.instance.GetCurrentLevel().GetBoundryPostion();
     }
   
     void Update()
     {
-        //if (!RaceManger.instance.GetRaceStatus())
-        //{
-        //    return;
-        //}
+        if (!RaceManger.instance.GetRaceStatus())
+        {
+            return;
+        }
         if (isPlayerFinishedRace)
         {
             ReduceSpeed();
-            PlayerMotion(); //we also check playerRb Move Rotation Also
+           
         }
         else if (!isPlayerFinishedRace)
         {
             GetInput();
-            PlayerMotion(); //we also check playerRb Move Rotation Also
+           
             HandlingTriggerObstacle();
         }
-        
-       
       
+    }
+    private void FixedUpdate()
+    {
+        if (!RaceManger.instance.GetRaceStatus())
+        {
+            return;
+        }
+        PlayerMotion(); //we also check playerRb Move Rotation Also
     }
     #region PlayerProperites
 
-   public void SetPlayerRaceStatus(bool  isplayerfinishRace)
+
+    public void SetPlayerRaceStatus(bool  isplayerfinishRace)
     {
         isPlayerFinishedRace = isplayerfinishRace;
     }
@@ -141,12 +150,12 @@ public class PlayerMovement : MonoBehaviour
         if (horizontal > 0)
         {
             flt_TargetAngle = flt_RotatingAngle;
-            playerRb.velocity = new Vector3(0, 0, 0);
+            //playerRb.velocity = new Vector3(0, 0, 0);
         }
         else if (horizontal < 0)
         {
             flt_TargetAngle = -flt_RotatingAngle;
-            playerRb.velocity = new Vector3(0, 0, 0);
+           // playerRb.velocity = new Vector3(0, 0, 0);
         }
         else
         {
@@ -156,23 +165,24 @@ public class PlayerMovement : MonoBehaviour
    
     private void PlayerMotion()
     {
-        
-        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotatingSpeed * Time.deltaTime);
-        transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0 );
-
        
-        
-       transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
-
+       
+        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotatingSpeed * Time.deltaTime);
+        transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
+       
+       playerRb.velocity = transform.forward * flt_CurrentMovementSpeed;
+       
     }
     public void ReduceSpeed()
     {
        
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
-
+       
         playerRb.velocity = new Vector3(0 , 0, 0);
         playerRb.angularVelocity = new Vector3(0, 0, 0);
     }
+
+   
     #endregion
 
 }

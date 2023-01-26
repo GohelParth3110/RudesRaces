@@ -35,12 +35,15 @@ public class TriggerInteractionEnemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag(tag_Obstacles))
         {
+
             ObstaclesProperites obstackleProperites = other.GetComponent<ObstaclesProperites>();
+
             SetDataOfWhenObstacleTrigger(obstackleProperites);
+            Destroy(other.gameObject);
         }
         if (other.gameObject.CompareTag(tag_WinningLine))
         {
-            Debug.Log("Hii");
+           
             enemyMoveMent.SetEnemyStatus(true);
             enemyHealth.GetCollider().enabled = false;
             RaceManger.instance.FinishedRace(this.gameObject.name, false);
@@ -54,6 +57,7 @@ public class TriggerInteractionEnemy : MonoBehaviour
 
     private void SetDataOfWhenObstacleTrigger(ObstaclesProperites obstaclesProperites)
     {
+             obstaclesProperites.playVfx();
             enemyHealth.TakeDamage(obstaclesProperites.GetDamage());
             enemyMoveMent.SetReduceSpeedWhenTriggerObstackle(
              obstaclesProperites.GetReduceSpeed(), obstaclesProperites.GetMaxTimeToReduceSpeed());

@@ -35,19 +35,20 @@ public class TriggerInteractionPlayer : MonoBehaviour
         {
             ObstaclesProperites obstackleProperites = other.GetComponent<ObstaclesProperites>();
             SetDataOfWhenObstacleTrigger(obstackleProperites);
+            Destroy(other.gameObject);
         }
         if (other.gameObject.CompareTag(tag_WinningLine))
         {
             RaceManger.instance.FinishedRace(this.gameObject.name, true);
             playerHealth.GetCollider().enabled = false;
-            playerMoveMnent.SetPlayerRaceStatus(false);
+            playerMoveMnent.SetPlayerRaceStatus(true);
             playerShooting.enabled = false;
         }
     }
 
     private void SetDataOfWhenObstacleTrigger(ObstaclesProperites obstaclesProperites)
     {
-       
+        obstaclesProperites.playVfx();
         playerHealth.TakeDamage(obstaclesProperites.GetDamage());
         playerMoveMnent.SetPlayerMovementWhenPlayerTouchObstacle
             (obstaclesProperites.GetReduceSpeed(), obstaclesProperites.GetMaxTimeToReduceSpeed());

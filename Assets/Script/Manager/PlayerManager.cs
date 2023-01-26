@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
     public  static PlayerManager instance;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject currenPlayer;
-
+   
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
     [SerializeField]private bool isPlayerLive = false;
    

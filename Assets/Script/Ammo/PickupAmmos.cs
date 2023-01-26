@@ -8,6 +8,7 @@ public class PickupAmmos : MonoBehaviour
     [SerializeField] private float flt_DelayResetPickup;
     [SerializeField] private GameObject body;
     [SerializeField] private Collider colliderAmmo;
+    [SerializeField] private GameObject particle_Destroy;
     private bool  isBody = true;
     private float flt_CurrnetTimeToReSetSystem;
     private string tag_Player = "Player";
@@ -23,13 +24,13 @@ public class PickupAmmos : MonoBehaviour
         if (other.gameObject.CompareTag(tag_Player))
         {
             other.gameObject.GetComponent<AmmoSystem>().Addammo(ammo);
-          
+            Instantiate(particle_Destroy, transform.position, transform.rotation);
             SetReSetSystem();
         }
         else if (other.gameObject.CompareTag(tag_Enemy))
         {
             other.gameObject.GetComponent<AmmoSystem>().Addammo(ammo);
-           
+            Instantiate(particle_Destroy, transform.position, transform.rotation);
             SetReSetSystem();
         }
     }
