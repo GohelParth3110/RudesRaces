@@ -30,6 +30,7 @@ public class TriggerInteractionEnemy : MonoBehaviour
         return enemyShooting;
     }
     
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -45,7 +46,7 @@ public class TriggerInteractionEnemy : MonoBehaviour
         {
            
             enemyMoveMent.SetEnemyStatus(true);
-            enemyHealth.GetCollider().enabled = false;
+           
             RaceManger.instance.FinishedRace(this.gameObject.name, false);
             enemyShooting.enabled = false;
         }

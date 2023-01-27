@@ -5,6 +5,8 @@ using UnityEngine;
 public class AmmoSystem : MonoBehaviour
 {
     [SerializeField] private int ammo;
+
+  
    
     public int  GetAmmo()
     {

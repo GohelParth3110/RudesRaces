@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PickupAmmos : MonoBehaviour
 {
-    [SerializeField] private int ammo;
-    [SerializeField] private float flt_DelayResetPickup;
-    [SerializeField] private GameObject body;
-    [SerializeField] private Collider colliderAmmo;
-    [SerializeField] private GameObject particle_Destroy;
-    private bool  isBody = true;
+    // this scrpit procedure of Ammo PickupCollceted
+    [SerializeField] private int ammo;                      // pickup how much ammo Get racer
+    [SerializeField] private float flt_DelayResetPickup;    // howmuch time collceted PickupShow in game
+    [SerializeField] private GameObject body;               // pickup Body 
+    [SerializeField] private Collider colliderAmmo;         // pickip Collider
+    [SerializeField] private GameObject particle_Destroy;   // pickup ParticleVfx When Pickup Collceted
+    private bool  isBody = true;                            
     private float flt_CurrnetTimeToReSetSystem;
+    // tag
     private string tag_Player = "Player";
     private string tag_Enemy = "Enemy";
 
@@ -21,9 +23,12 @@ public class PickupAmmos : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // when ammo trigger Racer  add Ammo in Racer
+        // Particle Vfxplay
+        // Some time Again Ammo enble
         if (other.gameObject.CompareTag(tag_Player))
         {
-            other.gameObject.GetComponent<AmmoSystem>().Addammo(ammo);
+            other.gameObject.GetComponent<AmmoSystem>().Addammo(ammo);          
             Instantiate(particle_Destroy, transform.position, transform.rotation);
             SetReSetSystem();
         }
@@ -46,6 +51,7 @@ public class PickupAmmos : MonoBehaviour
     }
     private void HandlingReSetPickup()
     {
+        // time Calculation For ammo Reset
         if (isBody)
         {
             return;

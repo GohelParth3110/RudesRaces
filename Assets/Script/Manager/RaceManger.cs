@@ -98,7 +98,7 @@ public class RaceManger : MonoBehaviour
 
         for (int i = 1; i < noOfRacerToSpawn; i++)
         {
-            index = Random.Range(0, list_RaceStartPositions.Count);
+           index = Random.Range(0, list_RaceStartPositions.Count);
             int enemyIndex = Random.Range(0, enemy.Length);
             GameObject currentEnemy = Instantiate(enemy[enemyIndex], list_RaceStartPositions[index].position,
               enemy[enemyIndex].transform.rotation);

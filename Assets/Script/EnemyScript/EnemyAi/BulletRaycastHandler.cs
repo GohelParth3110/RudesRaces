@@ -6,7 +6,7 @@ public class BulletRaycastHandler : MonoBehaviour
 {
     
     [Header("Scripts")]
-     private AmmoSystem ammoSystem;
+    private AmmoSystem ammoSystem;
     private EnemyShooting enemyShooting;
 
     [Header("RayCast Data")]
@@ -23,6 +23,9 @@ public class BulletRaycastHandler : MonoBehaviour
     private float shortestDistance;
     private bool shouldBeInDefaultState = false;
 
+    // in this scrpit  produce raycast and check somthing Is Touch and get Distance Between This Game Object And target distance.
+    // after Find Min. distnce.turn tower In Target Side.And Shoot Bullet .
+    // after Shooting Bullet Tower Get Defult Postion
 
     private void Start()
     {
@@ -66,6 +69,8 @@ public class BulletRaycastHandler : MonoBehaviour
  
     private void CheckingAllRaycast()
     {
+
+       
         if (isTargetLocked)
         {
             return;

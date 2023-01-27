@@ -43,7 +43,8 @@ public class EnemyHealth : MonoBehaviour
         flt_CurrentEnemyHealth = flt_MaxHealth;
      
         body.SetActive(true);
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        transform.position = new Vector3(transform.position.x, 2, transform.position.z);
+        
         particle_ShieldVFX.SetActive(true);
         StartCoroutine(ClosetShieldVfx());
         TriggerInteractionEnemy.GetEnemyMoveMent().enabled = true;

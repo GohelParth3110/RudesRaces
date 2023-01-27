@@ -13,7 +13,7 @@ public class RayCastHandler : MonoBehaviour
     [SerializeField] private float flt_Right_Boundry;
     [SerializeField] private LayerMask interRectiveLayerForTakeOverEnemy;
     [SerializeField] private float flt_RangeOfTakeOverEnemy;
-    private GameObject hit_Gameobject;
+  
     [SerializeField] private LayerMask interactiveLayers;
     [SerializeField]
     private float leftDistance;
@@ -38,7 +38,9 @@ public class RayCastHandler : MonoBehaviour
    
 
 
+    // old Scrpit For RayCasting
 
+    // in this Script We Get All rayCast Get Bool And Find Possiblity to Get best Path 
 
     private void FixedUpdate()
     {
@@ -241,7 +243,7 @@ public class RayCastHandler : MonoBehaviour
             if (Physics.Raycast(all_Transform[i].position, all_Transform[i].forward, out hit, flt_Range, interactiveLayers))
             {
                 SetStatusOfBool(i, true);
-                hit_Gameobject = hit.collider.gameObject;
+                
                 if (i>2 && i%2!=0)
                 {
                     if (leftDistance ==0)

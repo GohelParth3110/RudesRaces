@@ -12,9 +12,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float flt_CurrentMovementSpeed;  // current movement speed
     [SerializeField] private float flt_RotatingAngle;  // RotatingAngle
     [SerializeField] private float flt_RotatingSpeed; //  RotationSpeed
-   [SerializeField] private bool isPlayerFinishedRace;
+    [SerializeField] private bool isPlayerFinishedRace;
     [SerializeField] private float playerRbMode;
-    private float boundry;
+    [SerializeField] private bool isGroundTouch;
+    [SerializeField] private Transform transform_Ground;
+    [SerializeField] private float flt_GraoundRange;
+    [SerializeField] private float flt_GroundForce;
+   
 
     [Header("Game Data")]
     [SerializeField] private float flt_RateOfReduceSpeed;
@@ -34,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
        
         playerRb = GetComponent<Rigidbody>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
-        boundry = RaceManger.instance.GetCurrentLevel().GetBoundryPostion();
+       
     }
   
     void Update()
@@ -150,12 +154,12 @@ public class PlayerMovement : MonoBehaviour
         if (horizontal > 0)
         {
             flt_TargetAngle = flt_RotatingAngle;
-            //playerRb.velocity = new Vector3(0, 0, 0);
+           
         }
         else if (horizontal < 0)
         {
             flt_TargetAngle = -flt_RotatingAngle;
-           // playerRb.velocity = new Vector3(0, 0, 0);
+           
         }
         else
         {
@@ -166,12 +170,26 @@ public class PlayerMovement : MonoBehaviour
     private void PlayerMotion()
     {
        
-       
         flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotatingSpeed * Time.deltaTime);
         transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
        
        playerRb.velocity = transform.forward * flt_CurrentMovementSpeed;
+        if (!isGroundTouch)
+        {
+            playerRb.AddForce(Vector3.down * flt_GroundForce);
+        }
        
+    }
+    private void CheckGroundTouch()
+    {
+        if (Physics.Raycast(transform_Ground.position,-transform_Ground.up,flt_GraoundRange))
+        {
+            isGroundTouch = true;
+        }
+        else
+        {
+            isGroundTouch = false;
+        }
     }
     public void ReduceSpeed()
     {

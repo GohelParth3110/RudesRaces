@@ -14,26 +14,23 @@ public class enemyMovement : MonoBehaviour
     [SerializeField] private  float flt_MovementSpeed;          // ForwordMovementSpeed
     private float flt_CurrentMovementSpeed;  // CurrentMovementSpeed
     [SerializeField] private float offset;                      // this offset Angle is When TargetAngle And CurrnetAngle sametime
-    [SerializeField]
     private bool shouldTakeRaycastInput = true;             // this bool get Data Raycast input Get Or Not
     private bool hasReachedTargetRotation = false;        // geting Data Of Raycast Set Angle Posiotion or not 
     private bool isChangingDirection = false;                         // this bool Set TargetAngle
-    [SerializeField]
     private float flt_TargetAngle;
-    [SerializeField]
     private float flt_CurrentAngle;
-    [SerializeField]
     private  int currentInput;
-    [SerializeField]
     private  int currentIndex;
     private bool isFinishedRace;
-    private float boundry;
-  
+    [SerializeField] private float flt_GroundForce;
+    [SerializeField] private Transform groundTransform;
+    [SerializeField] private float flt_GroundRange;
+    [SerializeField]
+    private bool isGroundTouch;
    
-    
     [Header("Components")]
     private Rigidbody enemyRb;
-    private RayCastHandler rayCastHandler;
+    private EnemyAI rayCastHandler;
 
     [Header("Data Of Trigger of Something")]
     private bool isHit;
@@ -45,9 +42,9 @@ public class enemyMovement : MonoBehaviour
     private void Start()
     {
         enemyRb = GetComponent<Rigidbody>();
-        rayCastHandler = GetComponent<RayCastHandler>();
+        rayCastHandler = GetComponent<EnemyAI>();
         flt_CurrentMovementSpeed = flt_MovementSpeed;
-        boundry = RaceManger.instance.GetCurrentLevel().GetBoundryPostion();
+        
     }
     private void Update()
     {
@@ -58,13 +55,12 @@ public class enemyMovement : MonoBehaviour
         if (isFinishedRace)
         {
             ReduceSpeed();
-           // EnemyMotion();
+          
         }
         else
         {
             GetInput();
             GetPosition();
-            //EnemyMotion();
             HandlingReduceSpeedofObstacle();
         }
 
@@ -78,6 +74,7 @@ public class enemyMovement : MonoBehaviour
         {
             return;
         }
+        CheckGroundTouch();
         EnemyMotion();
     }
     public void ResetEnemyMoveMent()
@@ -87,6 +84,7 @@ public class enemyMovement : MonoBehaviour
         isFinishedRace = false;
         flt_CurrentSlowTime = 0;
         flt_MaxSlowTime = 0;
+       
     }
     public void SetEnemyStatus(bool isEnemyFinishRace)
     {
@@ -147,6 +145,17 @@ public class enemyMovement : MonoBehaviour
             StopReduceSpeedWhenTriggerObstacle();
         }
     }
+    private void CheckGroundTouch()
+    {
+        if (Physics.Raycast(groundTransform.position,-groundTransform.up,flt_GroundRange))
+        {
+            isGroundTouch = true;
+        }
+        else
+        {
+            isGroundTouch = false;
+        }
+    }
 
     private void StopReduceSpeedWhenTriggerObstacle()
     {
@@ -201,16 +210,16 @@ public class enemyMovement : MonoBehaviour
                 isChangingDirection = true;
                 SetMaxAngle();
             }
-            else
-            {
+            //else
+            //{
                 
-                currentInput = rayCastHandler.GetInputOfEnemy();
-                currentIndex = rayCastHandler.GetIndexOfRaycast();
-                flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
-                flt_RotationAngle = all_RotationAngle[currentIndex];
-                isChangingDirection = true;
-                SetMaxAngle();
-            }
+            //    currentInput = rayCastHandler.GetInputOfEnemy();
+            //    currentIndex = rayCastHandler.GetIndexOfRaycast();
+            //    flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
+            //    flt_RotationAngle = all_RotationAngle[currentIndex];
+            //    isChangingDirection = true;
+            //    SetMaxAngle();
+            //}
          
            
         }
@@ -224,15 +233,15 @@ public class enemyMovement : MonoBehaviour
                 isChangingDirection = true;
                 SetMaxAngle();
             }
-            else
-            {
-                currentInput = rayCastHandler.GetInputOfEnemy();
-                currentIndex = rayCastHandler.GetIndexOfRaycast();
-                flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
-                flt_RotationAngle = all_RotationAngle[currentIndex];
-                isChangingDirection = true;
-                SetMaxAngle();
-            }
+            //else
+            //{
+            //    currentInput = rayCastHandler.GetInputOfEnemy();
+            //    currentIndex = rayCastHandler.GetIndexOfRaycast();
+            //    flt_RotationalSpeed = all_RotationalSpeed[currentIndex];
+            //    flt_RotationAngle = all_RotationAngle[currentIndex];
+            //    isChangingDirection = true;
+            //    SetMaxAngle();
+            //}
             
 
         }
@@ -263,7 +272,7 @@ public class enemyMovement : MonoBehaviour
     {
         if (isChangingDirection)
         {
-            //enemyRb.velocity = new Vector3(0, 0, 0);
+           
             if (currentInput > 0)
             {
                 flt_TargetAngle = flt_RotationAngle;
@@ -285,30 +294,25 @@ public class enemyMovement : MonoBehaviour
     #region EnemyMotion
     private void EnemyMotion()
     {
-        // transform.Translate(transform.forward * flt_CurrentMovementSpeed * Time.deltaTime);
+      
+        flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, flt_RotationalSpeed * Time.deltaTime);
 
-            flt_CurrentAngle = Mathf.Lerp(flt_CurrentAngle, flt_TargetAngle, 
-                                flt_RotationalSpeed * Time.deltaTime);
-            transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
+        transform.localEulerAngles = new Vector3(0, flt_CurrentAngle, 0);
 
-             enemyRb.velocity = transform.forward*flt_CurrentMovementSpeed;
-        if (transform.position.y>0.5)
+        enemyRb.velocity = transform.forward*flt_CurrentMovementSpeed;
+        if (!isGroundTouch)
         {
-            enemyRb.velocity = -transform.up * flt_CurrentMovementSpeed;
+            enemyRb.AddForce(-transform.up * flt_GroundForce);
         }
-
-    
+       
+       
     }
 
     private void ReduceSpeed()
     {
-
-       
         flt_CurrentMovementSpeed = Mathf.Lerp(flt_CurrentMovementSpeed, 0, flt_RateOfReduceSpeed * Time.deltaTime);
         enemyRb.velocity = new Vector3(0, 0, 0);
         enemyRb.angularVelocity = new Vector3(0, 0, 0);
-     
-
     }
 
    

@@ -42,6 +42,7 @@ public class PlayerHealth : MonoBehaviour
 
         flt_CurrentPlayerHealth = flt_MaxPlayerHealth;
         body.SetActive(true);
+        transform.position = new Vector3(transform.position.x, 2, transform.position.z);
         particle_ShieldVFX.SetActive(true);
         StartCoroutine(ClosetShieldVfx());
         triggerInteractionPlayer.GetPlayerMovement().enabled = true;

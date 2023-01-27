@@ -40,7 +40,7 @@ public class TriggerInteractionPlayer : MonoBehaviour
         if (other.gameObject.CompareTag(tag_WinningLine))
         {
             RaceManger.instance.FinishedRace(this.gameObject.name, true);
-            playerHealth.GetCollider().enabled = false;
+          
             playerMoveMnent.SetPlayerRaceStatus(true);
             playerShooting.enabled = false;
         }
